@@ -1,0 +1,10 @@
+{
+    "manifest_version": 2,
+    "name": "Simple Unit Converter",
+    "description": "This extension will analyze a page and convert units to your preference",
+    "version": "1.0",
+    "content_scripts": [{
+        "matches": ["*://*/*"],
+        "js": ["matcher.js"]
+    }]
+}
