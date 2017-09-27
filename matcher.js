@@ -64,7 +64,6 @@ function replaceInches(match, p1, p2, offset, string) {
     return readableMilimeters(mm) + " (" + match.trim() + ")";
 }
 
-
 var p = document.getElementsByTagName("p");
 for (var i = 0; i < p.length; i++) {
     p[i].textContent = p[i].textContent.replace(/(?:(\d+)[′']\s)?((?:(?:\d\s)?\d[/.])?\d+)[″"]/g, replaceInches);

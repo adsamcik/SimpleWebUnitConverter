@@ -2,9 +2,12 @@
     "manifest_version": 2,
     "name": "Simple Unit Converter",
     "description": "This extension will analyze a page and convert units to your preference",
-    "version": "1.0",
-    "content_scripts": [{
-        "matches": ["*://*/*"],
-        "js": ["matcher.js"]
-    }]
+    "version": "0.0.1",
+    "browser_action": {
+        //"default_icon": "icon.png",
+        "default_popup": "panel.html"
+    },
+    "permissions": [
+        "activeTab"
+    ]
 }
