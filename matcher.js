@@ -1,14 +1,18 @@
+function round(value, decimals) {
+    return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+}
+
 function readableMilimeters(mm) {
     function print(mm, cm, m, km) {
         var string = "";
         if (km != 0)
-            string += km + " km ";
+            string += round(km, 4) + " km ";
         if (m != 0)
-            string += m + " m ";
+            string += round(m, 4) + " m ";
         if (cm != 0)
-            string += cm + " cm ";
+            string += round(cm, 4) + " cm ";
         if (mm != 0)
-            string += mm + " mm ";
+            string += round(mm, 4) + " mm ";
         return string.trim();
     }
 
@@ -30,15 +34,38 @@ function readableMilimeters(mm) {
     return print(mm, 0, 0, 0);
 }
 
-function replaceInches(match, offset, string) {
+function resolveImperial(input) {
+    if (input == null)
+        return NaN;
+    else {
+        var split = input.split(" ");
+        if (split.length == 2)
+            return parseInt(split[0]) + resolveFractions(split[1]);
+        else
+            return resolveFractions(split[0]);
+    }
+}
+
+function resolveFractions(input) {
+    var indexOf = input.indexOf("/");
+    if (indexOf > 0)
+        return parseInt(input.substring(0, indexOf)) / parseInt(input.substring(indexOf + 1));
+    else
+        return parseFloat(input);
+}
+
+function replaceInches(match, p1, p2, offset, string) {
     var footEnd = match.indexOf("'");
-    var mm = parseInt(match.substring(0, match.indexOf("′"))) * 304.8;
-    mm += parseInt(match.substring(footEnd, match.indexOf("″"))) * 25.4;
-    return readableMilimeters(mm) + " (" + match + ")";
+    var mm = 0;
+    if (p1)
+        mm += parseInt(p1) * 304.8;
+    mm += resolveImperial(p2) * 25.4;
+    console.log(match + " to " + mm);
+    return readableMilimeters(mm) + " (" + match.trim() + ")";
 }
 
 
 var p = document.getElementsByTagName("p");
 for (var i = 0; i < p.length; i++) {
-    p[i].textContent = p[i].textContent.replace(/\d+[′'][ ]?\d+[″"]/, replaceInches);
+    p[i].textContent = p[i].textContent.replace(/(?:(\d+)[′']\s)?((?:(?:\d\s)?\d[/.])?\d+)[″"]/g, replaceInches);
 }
